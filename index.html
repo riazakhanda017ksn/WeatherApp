@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="card">
+        <div class="search">
+            <input type="text" id="locationInput" placeholder="Enter location"">
+            <button id="getWeatherButton"><img src="images/search.png"></button>
+        </div>
+        <div id="weatherData" class="Weather">
+            <img src="images/rain.png" class="weather-icon">
+            <h1 id="temperatures" class="temp">22°c</h1>
+            <h2 id="cityName" class="city">New York</h2>
+            <div class="details">
+                  
+                         <div class="col">
+                        <img src="images/humidity.png">
+                            <div>
+                                <p id="humidity" class="humidity">50%</p>
+                                <p>Humidity</p>
+                    </div>
+                </div>
+                <div class="col">
+                    <img src="images/wind.png">
+                    <div>
+                       <p id="wind" class="wind" >15 km/h</p>
+                        <p>Wind Speed</p>
+                    </div>
+                </div>
+            </div>
+    </div>
+
+
+    <script>
+     const apiKey = "b3ae194ae6f7cc67deb2a85950d41364"; // Replace with your actual API key
+     const weatherDataDiv = document.getElementById("weatherData");
+     const Temperatures = document.getElementById("temperatures");
+     const City = document.getElementById("cityName")
+     const Humidity = document.getElementById("humidity")
+     const Wind = document.getElementById("wind")
+     document.getElementById("getWeatherButton").addEventListener("click", () => {
+            const location = document.getElementById("locationInput").value;
+            if (!location) {
+                alert("Please enter a location.");
+                return;
+            }
+
+    const apiUrl =  `https://api.openweathermap.org/data/2.5/weather?units=metric&q=${location}&appid=${apiKey}`
+    fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.cod === "404") {
+                        weatherDataDiv.textContent = "Location not found.";
+                        return;
+                    }
+
+                    // Process the weather data and display it in the HTML
+                    const temperature = data.main.temp;
+                    const description = data.weather[0].description;
+                    const cityName = data.name;
+                    const humidity = data.main.humidity + "%";
+                    const wind = data.wind.speed + " km/h";
+                 
+
+                    // const weatherInfo = `Weather in ${cityName}: ${description}, Temperature: ${temperature}°C`;
+                    // weatherDataDiv.textContent = weatherInfo;
+                    const temperatures = `${temperature}°C`;
+                    Temperatures.textContent = temperatures;
+                    const countryName = `${cityName}`
+                    City.textContent = cityName;
+                    const humidityPercent =  `${humidity}`;
+                    Humidity.textContent = humidity;
+                    const WindSpeed = `${wind}`;
+                    Wind.textContent = wind;
+
+                })
+                .catch(error => {
+                    console.error("Error fetching weather data:", error);
+                    weatherDataDiv.textContent = "Failed to fetch weather data.";
+                });
+        });
+  
+    // async function checkWeather(){
+    //     const response = await fetch(apiUrl);
+    //     var data = await(response.json());
+
+    //     console.log(data);
+
+    //     document.querySelector(".city").innerHTML = data.name;
+    //     document.querySelector(".temp").innerHTML = data.main.temp + "°c";
+    //     document.querySelector(".humidity").innerHTML = data.main.humidity + "%";
+    //     document.querySelector(".wind").innerHTML = data.wind.speed + " km/h";
+    
+
+
+
+    // }
+
+    // checkWeather();
+    </script>
+    
+</body>
+</html>
